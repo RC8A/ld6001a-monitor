@@ -1,4 +1,4 @@
-param([string]$Repository='RC8A/ld6001a-monitor')
+﻿param([string]$Repository='RC8A/ld6001a-monitor')
 $ErrorActionPreference='Stop'
 $root=Split-Path -Parent $PSScriptRoot
 $version=([IO.File]::ReadAllText((Join-Path $root 'version.txt'))).Trim()
@@ -8,8 +8,11 @@ $status=& git -C $root status --porcelain
 if($LASTEXITCODE -ne 0 -or $status){throw 'Commit and review the local repository before publishing'}
 $archive=Join-Path $root ('dist\LD6001A-Monitor-'+$version+'-win-x64.zip')
 if(-not(Test-Path -LiteralPath $archive)){throw 'Prepare the release package first'}
+$ErrorActionPreference='Continue'
 & gh repo view $Repository --json nameWithOwner,isPrivate 2>$null | Out-Null
-if($LASTEXITCODE -ne 0){
+$lookupExit=$LASTEXITCODE
+$ErrorActionPreference='Stop'
+if($lookupExit -ne 0){
     & gh repo create $Repository --private --source $root --remote origin --push
     if($LASTEXITCODE -ne 0){throw 'Failed to create private repository'}
 } else {
