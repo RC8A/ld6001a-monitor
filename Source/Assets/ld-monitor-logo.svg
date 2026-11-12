@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 120"><g transform="translate(0,4) scale(.4375)"><rect x="8" y="8" width="240" height="240" rx="52" fill="#142333"/>
+<circle cx="128" cy="128" r="84" fill="none" stroke="#427285" stroke-width="5"/>
+<circle cx="128" cy="128" r="52" fill="none" stroke="#31596C" stroke-width="4"/>
+<path d="M44 128H212M128 44V212" fill="none" stroke="#31596C" stroke-width="3"/>
+<path d="M128 128V44A84 84 0 0 1 187.4 68.6Z" fill="#39D0C0" fill-opacity=".15"/>
+<path d="M128 128L187.4 68.6" fill="none" stroke="#45D8C4" stroke-width="6" stroke-linecap="round"/>
+<circle cx="170" cy="93" r="11" fill="#B1F36B"/>
+<circle cx="89" cy="159" r="8" fill="#45D8C4"/>
+<circle cx="128" cy="128" r="5" fill="#EAF6FA"/></g><text x="132" y="70" fill="#142333" font-family="Segoe UI, sans-serif" font-weight="600" font-size="49">LD6001A Monitor</text><text x="135" y="96" fill="#517080" font-family="Segoe UI, sans-serif" font-size="12" letter-spacing="3">RADAR · PRESENCE · TRACKING</text></svg>

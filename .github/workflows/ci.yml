@@ -1,0 +1,32 @@
+name: build-and-test
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and run hardware-free checks
+        shell: powershell
+        run: ./Source/Build.ps1 -NoLaunch -BuildNumber $env:GITHUB_RUN_NUMBER
+      - name: Package release candidate
+        shell: powershell
+        run: ./scripts/Package-Release.ps1
+      - name: Save build, checks and visual previews
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LD6001A-Monitor-${{ github.run_number }}
+          if-no-files-found: warn
+          path: |
+            dist/*.zip
+            dist/*.sha256
+            Source/Previews/*.png
+            Source/tests-*.txt
+            Source/text-alignment*.txt
+            error.txt
