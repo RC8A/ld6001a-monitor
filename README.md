@@ -1,69 +1,87 @@
-﻿# LD6001A Monitor
+# LD6001A Monitor
+
+**English** | [Русский](README.ru.md)
 
 ![LD6001A Monitor](Source/Assets/ld-monitor-logo.png)
 
-Независимая программа для проверки радара присутствия **Hi-Link HLK-LD6001A-60G** через USB–UART. Windows 10 x64, WPF, .NET Framework 4.7.2 или новее. Автор — **Dmitry Popov**. Разработка при участии OpenAI Codex. Это отдельный проект, не программа и не прошивка производителя.
+An independent Windows application for testing the **Hi-Link HLK-LD6001A-60G** presence and multi-target tracking radar over USB–UART.
 
-Язык интерфейса переключается через меню «Язык / Language»: **Русский / English**. Выбор сохраняется.
+**Platform:** Windows 10 x64 · WPF · .NET Framework 4.7.2 or later  
+**Author:** Dmitry Popov · Developed with assistance from OpenAI Codex  
+**License:** PolyForm Noncommercial 1.0.0
 
-## Возможности
+This project is not affiliated with Hi-Link and does not include the manufacturer's software or firmware.
 
-- DEBUG 0: число людей; DEBUG 3: ID, координаты и скорости.
-- Мишень со следами целей, регулируемым затуханием и зеркалами X/Y.
-- Рисование и растягивание аппаратной зоны мышью, таблица границ справа.
-- Чтение параметров при подключении; настройки датчика не перезаписываются автоматически.
-- Изменения отправляются через 1 секунду после последней правки; подтверждаются ACK и повторным чтением.
-- Заливка кнопок подтверждённого режима DEBUG и состояния START/STOP. При запуске состояние неизвестно, загрузка датчика ожидается до 30 с.
-- Таблица всех 11 параметров в меню «Настройки». Времена отображаются в секундах.
-- Сохранение порта, скорости и настроек отображения в `data/settings.ini`.
-- Запись `rx.bin`, `session.txt` и `targets.csv` в отдельную папку каждой сессии.
+## Features
 
-## Запуск
+- **DEBUG 0:** people count. **DEBUG 3:** target IDs, coordinates and velocities.
+- Radar view with fading target trails, adjustable persistence, and X/Y mirroring.
+- Draw and resize the hardware detection zone with the mouse, or edit its boundaries in the table.
+- Read sensor settings on connection without automatically overwriting them.
+- Apply edits one second after the last change, then verify the ACK and read parameters back.
+- Highlight confirmed DEBUG and START/STOP states. An unknown state is not presented as stopped.
+- Wait up to 30 seconds for the sensor to initialize, retrying parameter reads.
+- Edit all 11 supported parameters in a table; time values are displayed in seconds.
+- Save the COM port, baud rate and display preferences in `data/settings.ini`.
+- Record raw UART bytes, command/response logs and target CSV data for each session.
+- **English and Russian interfaces**, selectable through **Language / Язык**. The selection is saved.
 
-Распакуйте релиз в доступный для записи каталог и откройте `LD6001A Monitor.exe`. Установка не требуется. По умолчанию COM7, 115200, 8N1, без flow control. Выберите свой порт и нажмите «Подключить». Первое действие программы — только `AT+READ`.
+## Getting started
 
-Для проверки интерфейса без оборудования есть кнопка «Демо». Для карты используйте DEBUG 3. В DEBUG 0 координаты не передаются; периодические сообщения могут приходить редко, согласно heartbeat.
+Download a ZIP from [Releases](https://github.com/RC8A/ld6001a-monitor/releases), extract it into a writable folder, and run `LD6001A Monitor.exe`. No installation is required.
 
-Подключение: TX датчика к RX моста, RX к TX, общая GND. У голого модуля питание и логика 3,3 В; питание должно соответствовать документации вашей платы. Не считайте выход 3,3 В USB–UART достаточным источником питания без проверки его допустимого тока.
+The default connection is **COM7, 115200 baud, 8N1, no flow control**. Select your USB–UART port and click **Connect**. The first command is `AT+READ`; connecting does not reapply locally saved sensor parameters.
 
-## Сборка и проверки
+Use **Demo** to try the interface without hardware. Select **DEBUG 3** for the radar view. DEBUG 0 does not transmit coordinates and may report periodically according to its heartbeat interval.
 
-Из корня репозитория:
+### Wiring
+
+Connect the sensor's TX to the adapter's RX, RX to TX, and share GND. The bare module uses 3.3 V power and logic; verify the requirements of your specific board. Do not assume the adapter's 3.3 V output can supply the radar's required current.
+
+## Building and testing
+
+From the repository root:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Source\Build.ps1
 ```
 
-Сборка использует компилятор .NET Framework, установленный в Windows. NuGet и сторонние библиотеки не требуются. Скрипт закрывает экземпляр этого приложения, компилирует EXE, выполняет проверки и открывает новую сборку. Для CI предусмотрен `-NoLaunch`.
+The build uses the .NET Framework compiler included with Windows. No NuGet packages or third-party runtime libraries are required. The script closes the previous instance of this application, builds the EXE, runs checks and opens the new build. Use `-NoLaunch` for CI.
 
-Автоматические проверки не открывают COM-порт. Проверяются парсер, ACK и чтение параметров, сохранение настроек, геометрия зоны, зеркала, таймеры, числовые поля и размещение элементов. В `Source/Previews` сохраняются изображения WPF для отдельной визуальной проверки. Тесты без датчика не подтверждают качество обнаружения в реальной комнате.
+Hardware-free checks cover packet parsing, ACK/readback verification, local settings, zone geometry, mirroring, timers, numeric controls and interface layout. Rendered WPF images are saved to `Source/Previews` for visual review. These checks do not open a COM port and do not establish real-world detection quality.
 
-## Версии и релизы
+## Versions and releases
 
-Версия релиза задаётся в `version.txt`: `major.minor.patch`. Текущая версия — **1.0.0**. Номер каждой успешной локальной сборки увеличивается отдельно; файл и «О программе» показывают, например, `1.0.0`, сборка `7`.
+`version.txt` contains the release version in `major.minor.patch` format. The current release is **1.0.0**. Successful local builds increment a separate build number, shown in the EXE metadata and **Help → About**.
 
-Следующий исправляющий релиз:
+To prepare the next patch release:
 
 ```powershell
 powershell.exe -NoProfile -File .\scripts\Bump-Version.ps1 -Part Patch
 ```
 
-Это изменит `1.0.0` на `1.0.1`. После сборки создайте пакет:
+This changes `1.0.0` to `1.0.1`. After building and testing, create the release package:
 
 ```powershell
 powershell.exe -NoProfile -File .\scripts\Package-Release.ps1
 ```
 
-ZIP, SHA-256 и локальная папка релиза создаются в `dist`. Пакет не содержит журналов, настроек конкретного пользователя, программ производителя или архивов старых сборок.
+The ZIP, SHA-256 checksum and staging folder are created in `dist`. Release packages exclude personal settings, logs, old builds and the manufacturer's programs.
 
-## Ограничения
+## Known limitations
 
-В документированном протоколе подтверждён один набор аппаратных границ X/Y, дополнительно ограниченный радиусом. Несколько независимых аппаратных зон не подтверждены. Зона включает начало координат, границы задаются в см: отрицательные −500…−20, положительные 20…500. В карте используется 100 см на единицу координат; соответствие проверяйте по известным расстояниям.
+The documented protocol exposes **one set of X/Y hardware boundaries**, additionally limited by the detection radius. Support for multiple independent hardware zones has not been confirmed.
 
-Металлические конструкции и многолучевые отражения могут влиять на результаты. Изменение настроек не устраняет аппаратные ограничения. Прошивка датчика не обновляется этой программой.
+The zone must include the sensor origin. Negative boundaries range from −500 to −20 cm; positive boundaries range from 20 to 500 cm. The radar view maps 100 cm to one coordinate unit; verify this against known distances with your hardware.
 
-## Лицензия
+Metal structures and multipath reflections can affect detection. Configuration changes cannot eliminate hardware limitations. This application does not update the sensor firmware.
 
-**PolyForm Noncommercial License 1.0.0** — см. [LICENSE.txt](LICENSE.txt) и [COPYRIGHT](COPYRIGHT). Разрешены некоммерческое использование, изменение и распространение в рамках лицензии. Для коммерческого использования требуется отдельное разрешение правообладателя. Это source-available проект с некоммерческой лицензией, а не OSI open source.
+## Contributing
 
-Программы и документация Hi-Link в репозиторий и релиз не включаются. Используется опубликованный протокол: [руководство производителя V1.2](https://r0.hlktech.com/download/HLK-LD6001A-60G/1/HLK-LD6001A-60G%E4%BA%BA%E4%BD%93%E8%BD%A8%E8%BF%B9%E9%9B%B7%E8%BE%BE%E6%A8%A1%E7%BB%84%E8%AF%B4%E6%98%8E%E4%B9%A6V1.2.pdf).
+Please submit changes through pull requests. The recommended workflow is **CI checks → maintainer review → squash merge**. See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution policy and [PUBLISHING.md](PUBLISHING.md) for release preparation instructions; these documents are currently in Russian.
+
+## License and attribution
+
+**PolyForm Noncommercial License 1.0.0** — see [LICENSE.txt](LICENSE.txt) and [COPYRIGHT](COPYRIGHT). Noncommercial use, modification and distribution are permitted under the license terms. Commercial use requires separate permission from the rights holder. This is a source-available project with a noncommercial license, not OSI-approved open source.
+
+Hi-Link programs and documentation are not bundled with this repository or its releases. Protocol reference: [manufacturer's V1.2 manual](https://r0.hlktech.com/download/HLK-LD6001A-60G/1/HLK-LD6001A-60G%E4%BA%BA%E4%BD%93%E8%BD%A8%E8%BF%B9%E9%9B%B7%E8%BE%BE%E6%A8%A1%E7%BB%84%E8%AF%B4%E6%98%8E%E4%B9%A6V1.2.pdf).
