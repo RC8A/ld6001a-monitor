@@ -6,8 +6,8 @@
 
 An independent Windows application for testing the **Hi-Link HLK-LD6001A-60G** presence and multi-target tracking radar over USB–UART.
 
-**Platform:** Windows 10 x64 · WPF · .NET Framework 4.7.2 or later  
-**Author:** Dmitry Popov · Developed with assistance from OpenAI Codex  
+**Platform:** Windows 10 x64 · WPF · .NET Framework 4.7.2 or later<br>
+**Author:** Dmitry Popov · Developed with assistance from OpenAI Codex<br>
 **License:** PolyForm Noncommercial 1.0.0
 
 This project is not affiliated with Hi-Link and does not include the manufacturer's software or firmware.
